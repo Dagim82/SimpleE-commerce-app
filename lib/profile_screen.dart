@@ -84,15 +84,6 @@ class _ProfileHeader extends StatelessWidget {
 
   const _ProfileHeader({required this.user});
 
-  String get _initials {
-    final first = user.firstName.isNotEmpty ? user.firstName[0] : '';
-    final last = user.lastName.isNotEmpty ? user.lastName[0] : '';
-    if (first.isEmpty && last.isEmpty) {
-      return user.username.isNotEmpty ? user.username[0].toUpperCase() : '?';
-    }
-    return '$first$last'.toUpperCase();
-  }
-
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
@@ -102,12 +93,10 @@ class _ProfileHeader extends StatelessWidget {
         CircleAvatar(
           radius: 40,
           backgroundColor: colorScheme.primaryContainer,
-          child: Text(
-            _initials,
-            style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  color: colorScheme.onPrimaryContainer,
-                  fontWeight: FontWeight.bold,
-                ),
+          child: HugeIcon(
+            icon: HugeIcons.strokeRoundedUserCircle,
+            size: 48,
+            color: colorScheme.onPrimaryContainer,
           ),
         ),
         const SizedBox(height: 12),

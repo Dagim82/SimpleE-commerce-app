@@ -28,6 +28,18 @@ class Product {
       rating: Rating.fromJson(json['rating'] as Map<String, dynamic>),
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'title': title,
+      'price': price,
+      'description': description,
+      'category': category,
+      'image': image,
+      'rating': {'rate': rating.rate, 'count': rating.count},
+    };
+  }
 }
 
 class Rating {
@@ -74,7 +86,9 @@ class User {
       firstName: name['firstname'] as String? ?? '',
       lastName: name['lastname'] as String? ?? '',
       phone: json['phone'] as String? ?? '',
-      address: Address.fromJson(json['address'] as Map<String, dynamic>? ?? const {}),
+      address: Address.fromJson(
+        json['address'] as Map<String, dynamic>? ?? const {},
+      ),
     );
   }
 }
@@ -114,6 +128,20 @@ class CartItem {
     return CartItem(
       product: product,
       quantity: quantity ?? this.quantity,
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'product': product.toJson(),
+      'quantity': quantity,
+    };
+  }
+
+  factory CartItem.fromJson(Map<String, dynamic> json) {
+    return CartItem(
+      product: Product.fromJson(json['product'] as Map<String, dynamic>),
+      quantity: json['quantity'] as int,
     );
   }
 }

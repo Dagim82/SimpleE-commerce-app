@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'auth_provider.dart';
+import 'cart_provider.dart';
 import 'home_screen.dart';
 import 'login_screen.dart';
 import 'storage_service.dart';
@@ -10,10 +12,24 @@ Future<void> main() async {
 
   final storage = StorageService();
   final savedToken = await storage.getToken();
+  final savedUsername = await storage.getUsername();
+  final savedCart = await storage.loadCart();
+
+  final initialAuth = (savedToken != null && savedUsername != null)
+      ? AuthState(token: savedToken, username: savedUsername)
+      : const AuthState();
 
   runApp(
     ProviderScope(
-      child: MyApp(isLoggedIn: savedToken != null),
+      overrides: [
+        authControllerProvider.overrideWith(
+          () => AuthController(initialState: initialAuth),
+        ),
+        cartProvider.overrideWith(
+          () => CartController(initialState: CartState(items: savedCart)),
+        ),
+      ],
+      child: MyApp(isLoggedIn: initialAuth.isLoggedIn),
     ),
   );
 }
@@ -29,7 +45,9 @@ class MyApp extends StatelessWidget {
       title: 'E-Commerce App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(255, 47, 130, 208),
+        ),
       ),
       home: isLoggedIn ? const HomeScreen() : const LoginScreen(),
     );

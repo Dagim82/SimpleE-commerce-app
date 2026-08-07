@@ -7,6 +7,8 @@ import 'home_screen.dart';
 import 'login_screen.dart';
 import 'storage_service.dart';
 
+const kSeedColor = Color.fromARGB(255, 47, 130, 208);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -45,8 +47,10 @@ class MyApp extends StatelessWidget {
       title: 'E-Commerce App',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color.fromARGB(255, 47, 130, 208),
+        colorScheme: ColorScheme.fromSeed(seedColor: kSeedColor),
+        appBarTheme: const AppBarTheme(
+          backgroundColor: kSeedColor,
+          foregroundColor: Colors.white,
         ),
       ),
       home: isLoggedIn ? const HomeScreen() : const LoginScreen(),

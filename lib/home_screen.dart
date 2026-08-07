@@ -66,7 +66,7 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
           IconButton(
             tooltip: 'Profile',
             icon: const HugeIcon(
-              icon: HugeIcons.strokeRoundedProfile,
+              icon: HugeIcons.strokeRoundedUser,
               size: 24,
             ),
             onPressed: () {

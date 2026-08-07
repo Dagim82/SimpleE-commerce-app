@@ -19,6 +19,8 @@ class ApiException implements Exception {
 class ApiService {
   static const String baseUrl = 'https://fakestoreapi.com';
 
+  bool _isSuccess(int statusCode) => statusCode >= 200 && statusCode < 300;
+
   Future<String> login(String username, String password) async {
     final response = await http.post(
       Uri.parse('$baseUrl/auth/login'),
@@ -26,7 +28,7 @@ class ApiService {
       body: jsonEncode({'username': username, 'password': password}),
     );
 
-    if (response.statusCode == 200) {
+    if (_isSuccess(response.statusCode)) {
       final data = jsonDecode(response.body) as Map<String, dynamic>;
       return data['token'] as String;
     }
@@ -41,7 +43,7 @@ class ApiService {
   Future<List<Product>> fetchProducts() async {
     final response = await http.get(Uri.parse('$baseUrl/products'));
 
-    if (response.statusCode != 200) {
+    if (!_isSuccess(response.statusCode)) {
       throw ApiException('Could not load products (${response.statusCode})');
     }
 
@@ -55,7 +57,7 @@ class ApiService {
     final response =
         await http.get(Uri.parse('$baseUrl/products/categories'));
 
-    if (response.statusCode != 200) {
+    if (!_isSuccess(response.statusCode)) {
       throw ApiException('Could not load categories (${response.statusCode})');
     }
 
@@ -66,7 +68,7 @@ class ApiService {
   Future<User> fetchUserByUsername(String username) async {
     final response = await http.get(Uri.parse('$baseUrl/users'));
 
-    if (response.statusCode != 200) {
+    if (!_isSuccess(response.statusCode)) {
       throw ApiException('Could not load user data (${response.statusCode})');
     }
 

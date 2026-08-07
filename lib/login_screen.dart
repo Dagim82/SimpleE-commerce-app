@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hugeicons/hugeicons.dart';
 
 import 'auth_provider.dart';
 import 'home_screen.dart';
@@ -34,17 +35,19 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   void _fillDemoCredentials() {
-    _usernameController.text = 'mor_2314';
-    _passwordController.text = '83r5^_';
+    setState(() {
+      _usernameController.text = 'mor_2314';
+      _passwordController.text = '83r5^_';
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    final auth = ref.watch(authControllerProvider);
     final colorScheme = Theme.of(context).colorScheme;
+    final auth = ref.watch(authControllerProvider);
 
     ref.listen(authControllerProvider, (previous, next) {
-      if (next.isLoggedIn) {
+      if (next.isLoggedIn && context.mounted) {
         Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (_) => const HomeScreen()),
         );
@@ -62,7 +65,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Icon(Icons.shopping_bag, size: 64, color: colorScheme.primary),
+                  HugeIcon(
+                    icon: HugeIcons.strokeRoundedShoppingBag03,
+                    size: 64,
+                    color: colorScheme.primary,
+                  ),
                   const SizedBox(height: 16),
                   Text(
                     'Welcome back',

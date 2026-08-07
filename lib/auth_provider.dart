@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'api_service.dart';
-import 'models.dart';
 import 'storage_service.dart';
 
 class AuthState {
@@ -9,7 +8,6 @@ class AuthState {
   final String? error;
   final String? token;
   final String? username;
-  final User? user;
 
   bool get isLoggedIn => token != null && token!.isNotEmpty;
 
@@ -18,7 +16,6 @@ class AuthState {
     this.error,
     this.token,
     this.username,
-    this.user,
   });
 
   AuthState copyWith({
@@ -26,23 +23,24 @@ class AuthState {
     String? error,
     String? token,
     String? username,
-    User? user,
   }) {
     return AuthState(
       isLoading: isLoading ?? this.isLoading,
       error: error,
       token: token ?? this.token,
       username: username ?? this.username,
-      user: user ?? this.user,
     );
   }
 }
 
 class AuthController extends Notifier<AuthState> {
+  final AuthState _initialState;
+
+  AuthController({AuthState? initialState})
+      : _initialState = initialState ?? const AuthState();
+
   @override
-  AuthState build() {
-    return const AuthState();
-  }
+  AuthState build() => _initialState;
 
   Future<void> login(String username, String password) async {
     state = state.copyWith(isLoading: true, error: null);
@@ -53,13 +51,11 @@ class AuthController extends Notifier<AuthState> {
 
       final token = await api.login(username, password);
       await storage.saveSession(token, username);
-      final user = await api.fetchUserByUsername(username);
 
       state = state.copyWith(
         isLoading: false,
         token: token,
         username: username,
-        user: user,
       );
     } on ApiException catch (e) {
       state = state.copyWith(isLoading: false, error: e.message);

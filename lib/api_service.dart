@@ -38,6 +38,31 @@ class ApiService {
     throw ApiException('Server error (${response.statusCode})');
   }
 
+  Future<List<Product>> fetchProducts() async {
+    final response = await http.get(Uri.parse('$baseUrl/products'));
+
+    if (response.statusCode != 200) {
+      throw ApiException('Could not load products (${response.statusCode})');
+    }
+
+    final data = jsonDecode(response.body) as List<dynamic>;
+    return data
+        .map((item) => Product.fromJson(item as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<List<String>> fetchCategories() async {
+    final response =
+        await http.get(Uri.parse('$baseUrl/products/categories'));
+
+    if (response.statusCode != 200) {
+      throw ApiException('Could not load categories (${response.statusCode})');
+    }
+
+    final data = jsonDecode(response.body) as List<dynamic>;
+    return data.cast<String>();
+  }
+
   Future<User> fetchUserByUsername(String username) async {
     final response = await http.get(Uri.parse('$baseUrl/users'));
 
@@ -45,8 +70,8 @@ class ApiService {
       throw ApiException('Could not load user data (${response.statusCode})');
     }
 
-    final users = jsonDecode(response.body) as List<dynamic>;
-    for (final item in users) {
+    final data = jsonDecode(response.body) as List<dynamic>;
+    for (final item in data) {
       final user = User.fromJson(item as Map<String, dynamic>);
       if (user.username.toLowerCase() == username.toLowerCase()) {
         return user;

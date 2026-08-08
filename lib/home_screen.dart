@@ -86,9 +86,20 @@ class _HomeScreenState extends ConsumerState<HomeScreen> {
               onChanged: (_) => setState(() {}),
               decoration: InputDecoration(
                 hintText: 'Search products by title...',
-                prefixIcon: const HugeIcon(
-                  icon: HugeIcons.strokeRoundedSearch01,
-                  size: 20,
+                prefixIconConstraints: const BoxConstraints(
+                  minWidth: 40,
+                  maxWidth: 40,
+                ),
+                prefixIcon: const Padding(
+                  padding: EdgeInsets.only(left: 12),
+                  child: SizedBox(
+                    width: 22,
+                    height: 22,
+                    child: HugeIcon(
+                      icon: HugeIcons.strokeRoundedSearch01,
+                      size: 22,
+                    ),
+                  ),
                 ),
                 suffixIcon: _searchController.text.isEmpty
                     ? null
